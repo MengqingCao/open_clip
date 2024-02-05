@@ -1,6 +1,9 @@
 import torch
 from contextlib import suppress
-
+try:
+    import torch_npu
+except ImportError:
+    torch_npu = None
 
 def get_autocast(precision):
     if precision == 'amp':

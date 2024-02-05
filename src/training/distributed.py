@@ -1,6 +1,11 @@
 import os
 
 import torch
+try:
+    import torch_npu
+except ImportError:
+    torch_npu = None
+
 import torch.distributed as dist
 
 try:
@@ -107,6 +112,10 @@ def init_distributed_device(args):
         else:
             device = 'cuda:0'
         torch.cuda.set_device(device)
+    if torch_npu != None and torch.npu.is_available():
+        # TODO: add distributed code for npu
+        device = "npu:0"
+        torch_npu.npu.set_device(device)
     else:
         device = 'cpu'
     args.device = device
