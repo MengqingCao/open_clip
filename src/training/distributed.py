@@ -114,7 +114,10 @@ def init_distributed_device(args):
         torch.cuda.set_device(device)
     if torch_npu != None and torch.npu.is_available():
         # TODO: add distributed code for npu
-        device = "npu:0"
+        if args.distributed and not args.no_set_device_rank:
+            device = 'npu:%d' % args.local_rank
+        else:
+            device = "npu:0"
         torch_npu.npu.set_device(device)
     else:
         device = 'cpu'
